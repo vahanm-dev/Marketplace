@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct LoginView: View {
+    // MARK: - Properties
+    
+    @Environment(AuthManager.self) private var authManager
+    
     @State private var email = ""
     @State private var password = ""
     @State private var isLoading = false
@@ -40,7 +44,7 @@ struct LoginView: View {
                         .padding(.horizontal, 24)
                 }
                 
-                Button { } label: {
+                Button { signIn() } label: {
                     Text("Login")
                         .font(.headline)
                         .frame(width: 360, height: 48)
@@ -49,6 +53,8 @@ struct LoginView: View {
                         .foregroundStyle(.white)
                         .padding(.vertical, 8)
                 }
+                .disabled(!formIsValid)
+                .opacity(formIsValid ? 1.0 : 0.5)
                 
                 Spacer()
                 
@@ -71,6 +77,24 @@ struct LoginView: View {
         }
     }
 }
+
+// MARK: - Private API
+
+private extension LoginView {
+    var formIsValid: Bool {
+        email.isValidEmail() && !password.isEmpty
+    }
+    
+    func signIn() {
+        Task {
+            isLoading = true
+            await authManager.signIn(email: email, password: password)
+            isLoading = false
+        }
+    }
+}
+
+// MARK: - Preview
 
 #Preview {
     LoginView()
