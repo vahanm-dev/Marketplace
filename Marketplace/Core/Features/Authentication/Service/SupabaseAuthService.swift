@@ -32,7 +32,7 @@ extension SupabaseAuthService {
     func signUp(email: String, password: String, username: String) async throws -> String {
         let response = try await client.auth.signUp(email: email, password: password)
         let userId = response.user.id.uuidString
-        // to-do: upload user data here
+        try await uploadUserData(with: userId, email: email, username: username)
         return userId
     }
     
@@ -44,5 +44,21 @@ extension SupabaseAuthService {
     func getCurrentUserSession() async throws -> String? {
         let supabaseUser = try await client.auth.session.user
         return supabaseUser.id.uuidString
+    }
+}
+
+// MARK: - Private API
+
+private extension SupabaseAuthService {
+    func uploadUserData(with uid: String, email: String, username: String) async throws {
+        let user = User(id: uid,
+                        email: email,
+                        username: username,
+                        createdAt: Date(),
+                        totalSales: 0,
+                        itemsSold: 0,
+                        itemsPurchased: 0)
+        
+        try await client.from("users").insert(user).execute()
     }
 }
