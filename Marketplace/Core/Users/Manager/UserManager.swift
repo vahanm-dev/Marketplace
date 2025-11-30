@@ -35,4 +35,13 @@ extension UserManager {
             print("DEBUG: Failed to fetch current user: \(error)")
         }
     }
+    
+    func updateProfileImageURL(_ imageURL: String) async {
+        do {
+            try await service.uploadProfileImageURL(imageURL)
+            self.currentUser?.profileImageUrl = imageURL
+        } catch {
+            print("DEBUG: Failed to update user profile image url with error: \(error)")
+        }
+    }
 }
