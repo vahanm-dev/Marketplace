@@ -129,4 +129,5 @@ private extension RegistrationView {
 
 #Preview {
     RegistrationView()
+        .environment(AuthManager())
 }

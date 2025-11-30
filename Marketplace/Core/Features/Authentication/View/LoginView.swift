@@ -98,4 +98,5 @@ private extension LoginView {
 
 #Preview {
     LoginView()
+        .environment(AuthManager())
 }

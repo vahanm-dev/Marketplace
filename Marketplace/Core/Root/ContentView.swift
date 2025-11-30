@@ -15,7 +15,7 @@ struct ContentView: View {
         Group {
             switch authManager.authState {
             case .authenticated:
-                Text("Main interface...")
+                UserProfileView()
             case .unauthenticated:
                 LoginView()
             case .unknown:
