@@ -21,12 +21,21 @@ struct UserProfileView: View {
             List {
                 if let currentUser = userManager.currentUser {
                     Section {
-                        AvatarView(
-                            imageUrl: currentUser.profileImageUrl,
-                            size: .large,
-                            profileImage: profileImage
-                        ) {
-                            showPhotosPicker = true
+                        HStack(spacing: 12) {
+                            AvatarView(
+                                imageUrl: currentUser.profileImageUrl,
+                                size: .large,
+                                profileImage: profileImage
+                            ) {
+                                showPhotosPicker = true
+                            }
+                        }
+                        
+                        VStack(alignment: .leading) {
+                            Text(currentUser.username)
+                            
+                            Text(currentUser.email)
+                                .foregroundStyle(.secondary)
                         }
                     }
                     
