@@ -12,6 +12,7 @@ struct CreateListingView: View {
     @State private var title = ""
     @State private var price = ""
     @State private var description = ""
+    @State private var selectedCategory: Listing.Category = .other
     
     @State private var pickedPhotoItems: [PhotosPickerItem] = []
     @State private var selectedImages: [UIImage] = []
@@ -25,7 +26,12 @@ struct CreateListingView: View {
                     TextField("Price", text: $price)
                         .keyboardType(.decimalPad)
                     
-                    // to-do: - listing category picker
+                    Picker("Category", selection: $selectedCategory) {
+                        ForEach(Listing.Category.allCases) { category in
+                            Text(category.displayName)
+                                .tag(category)
+                        }
+                    }
                 }
                 
                 Section("Description") {
