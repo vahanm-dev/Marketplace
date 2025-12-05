@@ -17,6 +17,10 @@ struct CreateListingView: View {
     @State private var pickedPhotoItems: [PhotosPickerItem] = []
     @State private var selectedImages: [UIImage] = []
     
+    @State private var viewModel = CreateListingViewModel(service: CreateListingService())
+    
+    @Environment(UserManager.self) private var userManager
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -76,7 +80,7 @@ struct CreateListingView: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Post") {
-                        //
+                        submit()
                     }
                 }
             }
@@ -84,6 +88,31 @@ struct CreateListingView: View {
     }
 }
 
+private extension CreateListingView {
+    func submit() {
+        guard let priceValue = Double(price.trimmingCharacters(in: .whitespacesAndNewlines)) else { return }
+        guard let seller = userManager.currentUser else { return }
+        
+        let imageData: [Data] = selectedImages.compactMap { $0.jpegData(compressionQuality: 0.8) }
+        
+        Task {
+            do {
+                try await viewModel.createListing(
+                    title: title,
+                    description: description,
+                    price: priceValue,
+                    category: selectedCategory,
+                    imageData: imageData,
+                    seller: seller
+                )
+            } catch {
+                print("DEBUG: Failed to crate listing with error: \(error)")
+            }
+        }
+    }
+}
+
 #Preview {
     CreateListingView()
+        .environment(UserManager())
 }

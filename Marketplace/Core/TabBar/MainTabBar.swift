@@ -24,7 +24,7 @@ struct MainTabBar: View {
             }
             
             Tab("Sell", systemImage: "plus.circle", value: TabIdentifier.createListing) {
-                Text("Create Listing View")
+                CreateListingView()
             }
             
             Tab("Notifications", systemImage: "heart", value: TabIdentifier.notifications) {
